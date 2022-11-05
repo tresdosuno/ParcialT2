@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title></title>
+</h:head>
+<h:body>
+    <h1>TITULO</h1>
+    <h:form id="pacientes">
+        <!--Por favor no cambiar el 'id':-->
+        <p:inputText id="identificacion_paciente" type="int" value="#{id}"></p:inputText>
+        <p:selectOneMenu value="#{tipo}" >
+            <f:selectItems value="#{mb.tiposIdentificacion}" />
+        </p:selectOneMenu>
+        <!--Por favor no cambiar el 'value':-->
+        <p:commandButton value="Consultar" update="pacientes" actionListener="#{mb.getData()}"></p:commandButton>
+
+        <p:dataTable var="paciente" value="#{mb.consultarPaciente(id, tipo)}" rows="10"
+                     paginator="true" paginatorPosition="bottom"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+        >
+            <p:column headerText="Id">
+                <h:outputText value="#{paciente.id}" />
+            </p:column>
+
+            <p:column headerText="Tipo id">
+                <h:outputText value="#{paciente.tipo_id}" />
+            </p:column>
+
+            <p:column headerText="Nacimiento">
+                <h:outputText value="#{paciente.fechaNacimiento}" />
+            </p:column>
+
+            <p:column headerText="nombre">
+                <h:outputText value="#{paciente.nombre}" />
+            </p:column>
+
+            <p:column headerText="Fecha consulta">
+                <h:outputText value="#{paciente.fecha_y_hora}" />
+            </p:column>
+
+            <p:column headerText="Resumen">
+                <h:outputText value="#{paciente.resumen}" />
+            </p:column>
+
+
+        </p:dataTable>
+
+    </h:form>
+</h:body>
+</html>

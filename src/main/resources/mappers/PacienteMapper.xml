@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="edu.eci.pdsw.samples.persistence.mybatisimpl.mappers.PacienteMapper">
+
+    <resultMap type='Paciente' id='PacienteResult'>
+        <id property='id' column='id'/>        
+        <id property='tipo_id' column='tipo_id' typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+        <result property='fechaNacimiento' column='fecha_nacimiento'/>
+        <result property='nombre' column='nombre'/>
+        <collection property="consultas" ofType="Consulta" resultMap="ConsultaResult"/>
+    </resultMap>
+
+    <resultMap type='Consulta' id='ConsultaResult'>
+        <id property='id' column='idCONSULTAS'/>
+        <result property='fechayHora' column='fecha_y_hora'/>
+        <result property='resumen' column='resumen'/>
+    </resultMap>
+
+
+    <select id="getPacientes" resultMap="PacienteResult">
+        SELECT
+            p.id,
+            p.tipo_id,
+            p.fecha_nacimiento,
+            p.nombre
+        FROM
+            PACIENTES as p
+    </select>
+
+    <select id="getPaciente" resultMap="PacienteResult">
+        SELECT
+            p.id,
+            p.tipo_id,
+            p.fecha_nacimiento,
+            p.nombre,
+            c.fecha_y_hora,
+            c.resumen
+        FROM
+            PACIENTES as p
+        JOIN
+            CONSULTAS as c
+        ON
+            (p.id=c.PACIENTES_id AND p.tipo_id=c.PACIENTES_tipo_id)
+        WHERE
+            p.id=#{idPaciente}
+        AND
+            p.tipo_id=#{idType}
+        ORDER BY
+            c.fecha_y_hora DESC
+    </select>
+
+    <select id="getPacientesMenores" resultMap="PacienteResult">
+        SELECT
+            p.id,
+            p.tipo_id,
+            p.fecha_nacimiento
+        FROM
+            PACIENTES as p
+        JOIN
+            CONSULTAS as c
+        ON
+            (p.id=c.PACIENTES_id AND p.tipo_id=c.PACIENTES_tipo_id)
+        WHERE
+            (c.resumen LIKE '%varicela%'
+        OR
+            c.resumen LIKE '%hepatitis%')
+        AND
+            p.tipo_id = 'TI'
+        ORDER BY
+            p.fecha_nacimiento DESC
+    </select>
+
+</mapper>
